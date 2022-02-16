@@ -16,7 +16,7 @@ import (
 	"github.com/pion/webrtc/v3/pkg/media/ivfreader"
 )
 
-const cipherKey = 0xAA
+const shiftCipherKey = 0xAA
 
 func main() {
 	peerConnection, err := webrtc.NewPeerConnection(webrtc.Configuration{
@@ -89,7 +89,7 @@ func main() {
 
 			// Encrypt video using XOR Cipher
 			for i := range frame {
-				frame[i] ^= cipherKey
+				frame[i] ^= shiftCipherKey
 			}
 
 			time.Sleep(sleepTime)

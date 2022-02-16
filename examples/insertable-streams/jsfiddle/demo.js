@@ -1,7 +1,7 @@
 /* eslint-env browser */
 
-// cipherKey that video is encrypted with
-const cipherKey = 0xAA
+// shiftCipherKey that video is encrypted with
+const shiftCipherKey = 0xAA
 
 const pc = new RTCPeerConnection({ encodedInsertableStreams: true, forceEncodedVideoInsertableStreams: true })
 const log = msg => {
@@ -24,12 +24,12 @@ window.toggleDecryption = () => {
 // Loop that is called for each video frame
 const reader = receiverStreams.readable.getReader()
 const writer = receiverStreams.writable.getWriter()
-reader.read().then(function processVideo ({ done, value }) {
+reader.read().then(function processVideo({ done, value }) {
   const decrypted = new DataView(value.data)
 
   if (applyDecryption) {
     for (let i = 0; i < decrypted.buffer.byteLength; i++) {
-      decrypted.setInt8(i, decrypted.getInt8(i) ^ cipherKey)
+      decrypted.setInt8(i, decrypted.getInt8(i) ^ shiftCipherKey)
     }
   }
 
@@ -77,7 +77,7 @@ const updateSupportBanner = () => {
 document.addEventListener('DOMContentLoaded', updateSupportBanner)
 
 // Shim to support both versions of API
-function getInsertableStream (transceiver) {
+function getInsertableStream(transceiver) {
   let insertableStreams = null
   if (transceiver.receiver.createEncodedVideoStreams) {
     insertableStreams = transceiver.receiver.createEncodedVideoStreams()
