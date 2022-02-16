@@ -9,10 +9,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/mohammadne/webRTC/examples/common"
 	"github.com/pion/interceptor"
 	"github.com/pion/rtcp"
 	"github.com/pion/webrtc/v3"
-	"github.com/pion/webrtc/v3/examples/internal/signal"
 	"github.com/pion/webrtc/v3/pkg/media"
 	"github.com/pion/webrtc/v3/pkg/media/ivfwriter"
 	"github.com/pion/webrtc/v3/pkg/media/oggwriter"
@@ -156,7 +156,7 @@ func main() {
 
 	// Wait for the offer to be pasted
 	offer := webrtc.SessionDescription{}
-	signal.Decode(signal.MustReadStdin(), &offer)
+	common.Decode(common.MustReadStdin(), &offer)
 
 	// Set the remote SessionDescription
 	err = peerConnection.SetRemoteDescription(offer)
@@ -185,7 +185,7 @@ func main() {
 	<-gatherComplete
 
 	// Output the answer in base64 so we can paste it in browser
-	fmt.Println(signal.Encode(*peerConnection.LocalDescription()))
+	fmt.Println(common.Encode(*peerConnection.LocalDescription()))
 
 	// Block forever
 	select {}

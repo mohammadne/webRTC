@@ -9,9 +9,9 @@ import (
 	"io"
 	"time"
 
+	"github.com/mohammadne/webRTC/examples/common"
 	"github.com/pion/rtcp"
 	"github.com/pion/webrtc/v3"
-	"github.com/pion/webrtc/v3/examples/internal/signal"
 )
 
 const (
@@ -19,11 +19,11 @@ const (
 )
 
 func main() { // nolint:gocognit
-	sdpChan := signal.HTTPSDPServer()
+	sdpChan := common.HTTPSDPServer()
 
 	// Everything below is the Pion WebRTC API, thanks for using it ❤️.
 	offer := webrtc.SessionDescription{}
-	signal.Decode(<-sdpChan, &offer)
+	common.Decode(<-sdpChan, &offer)
 	fmt.Println("")
 
 	peerConnectionConfig := webrtc.Configuration{
@@ -113,7 +113,7 @@ func main() { // nolint:gocognit
 	<-gatherComplete
 
 	// Get the LocalDescription and take it to base64 so we can paste in browser
-	fmt.Println(signal.Encode(*peerConnection.LocalDescription()))
+	fmt.Println(common.Encode(*peerConnection.LocalDescription()))
 
 	localTrack := <-localTrackChan
 	for {
@@ -121,7 +121,7 @@ func main() { // nolint:gocognit
 		fmt.Println("Curl an base64 SDP to start sendonly peer connection")
 
 		recvOnlyOffer := webrtc.SessionDescription{}
-		signal.Decode(<-sdpChan, &recvOnlyOffer)
+		common.Decode(<-sdpChan, &recvOnlyOffer)
 
 		// Create a new PeerConnection
 		peerConnection, err := webrtc.NewPeerConnection(peerConnectionConfig)
@@ -173,6 +173,6 @@ func main() { // nolint:gocognit
 		<-gatherComplete
 
 		// Get the LocalDescription and take it to base64 so we can paste in browser
-		fmt.Println(signal.Encode(*peerConnection.LocalDescription()))
+		fmt.Println(common.Encode(*peerConnection.LocalDescription()))
 	}
 }
